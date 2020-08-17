@@ -45,6 +45,19 @@ def nocontrol(opt):
     hotspotswriter(hotspots=hotspots, samplename=samplename, bayesfactorthreshold=bayes)
 
 
+    if BaseFDR:
+
+        dhstobw(bamfile=datafile, samplename=samplename, excludechr=excludechr)
+
+        CuttingBwFile = samplename + '_' + 'cutting.bw'
+
+        base_FDR_dict = calculate_FDR(hotspots=hotspots, CuttingBwFile = CuttingBwFile, countchr=countchr, boundary_width=50)
+
+        baseFDRFile = samplename + '_' + 'baseFDR.bed'
+
+        write_hotspot_FDR(base_FDR_dict, baseFDRFile)
+
+
     sampleinfors = list()
 
     sampleinfor = Sampleinfor(samplename=samplename, datafile=datafile, fregion=fregion)

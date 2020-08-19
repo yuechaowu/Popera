@@ -2,8 +2,9 @@ import logging
 from optparse import OptionParser
 from Poperalib.hotspotscount import *
 from Poperalib.poperaio import *
+from Poperalib.FDR_calu_write import *
+from Poperalib.Bam2CuttingBW import *
 import os
-
 
 def main():
 
@@ -34,6 +35,10 @@ def nocontrol(opt):
 
     bigwig = opt.bigwig
 
+    excludechr = opt.excludechr
+
+    BaseFDR = opt.BaseFDR
+
     fregion = FRegion(bamfile=datafile,  countchr=countchr, nthreads=nthreads)
 
     hotspots = hotspotscount_nocontrol(bamfile=datafile, threshold=threshold, kernellength=bw,
@@ -51,7 +56,7 @@ def nocontrol(opt):
 
         CuttingBwFile = samplename + '_' + 'cutting.bw'
 
-        base_FDR_dict = calculate_FDR(hotspots=hotspots, CuttingBwFile = CuttingBwFile, countchr=countchr, boundary_width=50)
+        base_FDR_dict = calculate_FDR(hotspots=hotspots, CuttingBwFile = CuttingBwFile, nthreads=nthreads, boundary_width=50 )
 
         baseFDRFile = samplename + '_' + 'baseFDR.bed'
 
@@ -117,6 +122,8 @@ def get_optparser():
     # poperaopt.add_option("-m","--maxinsert",dest="maxinsert",type="int",help="when you use paired library, please set the maxinsert size",default=80)
 
     # poperaopt.add_option("--pe", dest="pe", action="store_true", help="paired-end reads or single-end reads, default=False (single end)", default=False)
+
+    poperaopt.add_option("--BaseFDR", dest="BaseFDR", action="store_true", help="return each base FDR", default=False)
 
     return poperaopt
 
